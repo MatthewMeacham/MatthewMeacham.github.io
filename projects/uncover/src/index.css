@@ -1,0 +1,15 @@
+* { 
+	padding: 0;
+	margin: 20px;
+}
+
+#uncover-canvas { 
+	background: #EEE;
+	display: block;
+	margin: 0 auto;
+}
+
+#uncover-image {
+	visibility: hidden;
+	display: none;
+}
