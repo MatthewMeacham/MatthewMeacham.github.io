@@ -12,9 +12,16 @@ let balls = [];
 
 let backgroundImage;
 
-function initialize() {
-	player = new Player(canvas.width / 2, 0);
+const gameGridSize = 50;
+let gameGrid;
 
+function initialize() {
+	gameGrid = new GameGrid(gameGridSize);
+	window.uncover.gameGrid = gameGrid;
+
+	player = new GridPlayer(gameGridSize / 2, 0);
+
+	/*
 	for (let i = 0; i < numberOfBalls; i++) {
 		const x = Math.random() * canvas.width;
 		const y = Math.random() * canvas.height;
@@ -22,6 +29,7 @@ function initialize() {
 	}
 
 	backgroundImage = document.getElementById('uncover-image');
+	*/
 
 	initializeKeyListeners();
 }
@@ -35,6 +43,7 @@ function render() {
 	context.clearRect(0, 0, canvas.width, canvas.height);
 	
 	// Background Image TODO
+	/*
 	context.save();
 	for (uncoveredAreaVertices of player.uncoveredAreas) {
 		context.beginPath();
@@ -52,9 +61,11 @@ function render() {
 		context.save();
 	}
 	context.restore();
+	*/
 
-
+	gameGrid.render(context);
 	player.render(context);
+
 	for (ball of balls) {
 		ball.render(context);
 	}
@@ -86,14 +97,7 @@ function gameOver() {
 	clearInterval(tick);
 }
 
-function restart() {
-	tickInterval = setInterval(tick, 20);
-
-}
-
 function keyDownHandler(e) {
-	console.log(e.key);
-
 	player.keyDownHandler(e);
 
 	if (e.key === 'Escape' || e.key === 'Esc' || e.key === ' ') {
@@ -108,4 +112,4 @@ function keyUpHandler(e) {
 initialize();
 
 render();
-let tickInterval = setInterval(tick, 20);
+let tickInterval = setInterval(tick, 30);
