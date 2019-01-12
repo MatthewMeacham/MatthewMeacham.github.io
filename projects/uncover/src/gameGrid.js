@@ -68,6 +68,22 @@ class GameGrid {
 		}
 	}
 
+	tick() {
+		this._checkForWin();
+	}
+
+	_checkForWin() {
+		for(let x = 0; x < this.grid.length; x++) {
+			for (let y = 0; y < this.grid[x].length; y++) {
+				if (this.grid[x][y] === GridType.EMPTY) {
+					return;
+				}
+			}
+		}
+
+		gameWon = true;
+	}
+
 	fill(x, y) {
 		this.grid[x][y] = GridType.FILLED;
 	}

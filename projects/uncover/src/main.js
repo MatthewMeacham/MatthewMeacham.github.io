@@ -5,10 +5,12 @@ window.uncover = {};
 window.uncover.canvas = canvas;
 
 let paused = false;
+let gameOver = false;
+let gameWon = false;
 
 let player;
-const numberOfBalls = 2;
-let balls = [];
+const numberOfEnemies = 2;
+let enemies = [];
 
 let backgroundImage;
 
@@ -20,18 +22,20 @@ function initialize() {
 	window.uncover.gameGrid = gameGrid;
 
 	player = new GridPlayer(gameGridSize / 2, 0);
+	window.uncover.player = player;
 
-	/*
-	for (let i = 0; i < numberOfBalls; i++) {
-		const x = Math.random() * canvas.width;
-		const y = Math.random() * canvas.height;
-		balls.push(new Ball(x, y, 10));
+	for (let i = 0; i < numberOfEnemies; i++) {
+		const gridX = randomIntegerInRangeInclusive(0, gameGridSize);
+		const gridY = gameGridSize - 1;
+		
+		enemies.push(new GridEnemy(gridX, gridY));
 	}
 
-	backgroundImage = document.getElementById('uncover-image');
-	*/
-
 	initializeKeyListeners();
+}
+
+function randomIntegerInRangeInclusive(min, max) {
+    return Math.floor(Math.random() * (max - min + 1) + min);
 }
 
 function initializeKeyListeners() {
@@ -41,42 +45,32 @@ function initializeKeyListeners() {
 
 function render() {
 	context.clearRect(0, 0, canvas.width, canvas.height);
-	
-	// Background Image TODO
-	/*
-	context.save();
-	for (uncoveredAreaVertices of player.uncoveredAreas) {
-		context.beginPath();
-		context.moveTo(uncoveredAreaVertices[0].x, uncoveredAreaVertices[0].y);
-		for (let i = 1; i < uncoveredAreaVertices.length; i++) {
-			context.lineTo(uncoveredAreaVertices[i].x, uncoveredAreaVertices[i].y);
-		}
-		context.closePath();
-		
-		context.clip();
-
-		context.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
-
-		context.restore();
-		context.save();
-	}
-	context.restore();
-	*/
 
 	gameGrid.render(context);
 	player.render(context);
 
-	for (ball of balls) {
-		ball.render(context);
+	for (enemy of enemies) {
+		enemy.render(context);
 	}
 
 	context.font = "16px Verdana";
     context.fillStyle = "black";
 	context.fillText("Lives: " + player.lives, canvas.width - 70, 20);
 
-	if (paused) {
+	if (gameWon) {
 		context.font = "48px Verdana";
-		context.fillStyle = "black";
+		context.fillStyle = "red";
+		context.fillText("Game Won!", canvas.width / 2 - 140, canvas.height / 2 - 10);
+		context.font = "42px Verdana"
+		context.fillText("Thanks for uncovering", 10, canvas.height / 2 + 50);
+		context.fillText("info about me", 110, canvas.height / 2 + 90);
+	} else if (gameOver) {
+		context.font = "48px Verdana";
+		context.fillStyle = "red";
+		context.fillText("Game Over!", canvas.width / 2 - 140, canvas.height / 2 - 10);
+	} else if (paused) {
+		context.font = "48px Verdana";
+		context.fillStyle = "red";
 		context.fillText("Paused", canvas.width / 2 - 80, canvas.height / 2 - 10);
 	}
 	
@@ -84,17 +78,14 @@ function render() {
 }
 
 function tick() {
-	if (!paused) {
+	if (!paused && !gameOver && !gameWon) {
+		gameGrid.tick();
 		player.tick();
-
-		for (ball of balls) {
-			ball.tick();
+		
+		for (enemy of enemies) {
+			enemy.tick();
 		}
 	}
-}
-
-function gameOver() {
-	clearInterval(tick);
 }
 
 function keyDownHandler(e) {

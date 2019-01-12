@@ -1,10 +1,3 @@
-const Direction = {
-	RIGHT: 1,
-	LEFT: 2,
-	UP: 3,
-	DOWN: 4
-};
-
 class GridPlayer {
 	constructor(gridX, gridY) {
 		this.gridX = gridX;
