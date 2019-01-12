@@ -42,7 +42,7 @@ class GridEnemy {
 
 				// See if the enemy is touching the player
 				if (this.gridX === window.uncover.player.gridX && this.gridY === window.uncover.player.gridY) {
-					gameOver = true;
+					window.uncover.gameStatus = GameStatus.GAME_OVER;
 				}
 			}
 		} else {
