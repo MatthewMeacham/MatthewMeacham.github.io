@@ -78,7 +78,7 @@ class GameGrid {
 			}
 		}
 
-		window.uncover.gameStatus = GameStatus.GAME_WON;
+		gameWon();
 	}
 
 	fill(x, y) {

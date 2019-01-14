@@ -61,13 +61,19 @@ function render() {
 		context.font = "48px Verdana";
 		context.fillStyle = "red";
 		context.fillText("Game Won!", canvas.width / 2 - 140, canvas.height / 2 - 10);
+
 		context.font = "42px Verdana"
-		context.fillText("Thanks for uncovering", 10, canvas.height / 2 + 50);
-		context.fillText("info about me", 110, canvas.height / 2 + 90);
+		context.fillStyle = "red";
+		context.fillText("Thanks for uncovering", canvas.width / 2 - 250, canvas.height / 2 + 50);
+		context.fillText("info about me", canvas.width / 2 - 150, canvas.height / 2 + 90);
+		context.fillText("See below for details", canvas.width / 2 - 225, canvas.height / 2 + 130);
 	} else if (window.uncover.gameStatus === GameStatus.GAME_OVER) {
 		context.font = "48px Verdana";
 		context.fillStyle = "red";
 		context.fillText("Game Over!", canvas.width / 2 - 140, canvas.height / 2 - 10);
+
+		context.font = "42px Verdana"
+		context.fillText("Press 'R' to restart!", canvas.width / 2 - 200, canvas.height / 2 + 40);
 	} else if (window.uncover.gameStatus === GameStatus.PAUSED) {
 		context.font = "48px Verdana";
 		context.fillStyle = "red";
@@ -106,9 +112,7 @@ function keyDownHandler(e) {
 			window.uncover.gameStatus = GameStatus.PAUSED;
 		}
 	} else if (e.key === 'r') {
-		window.uncover.gameStatus = GameStatus.PAUSED;
-		initialize();
-		window.uncover.gameStatus = GameStatus.PLAYING;
+		restart();
 	}
 }
 
@@ -123,6 +127,17 @@ function randomIntegerInRangeInclusive(min, max) {
 function gameOver() {
 	window.uncover.gameStatus = GameStatus.GAME_OVER;
 	clearInterval(tickInterval);
+}
+
+function gameWon() {
+	window.uncover.gameStatus = GameStatus.GAME_WON;
+	clearInterval(tickInterval);
+}
+
+function restart() {
+	window.uncover.gameStatus = GameStatus.PAUSED;
+	initialize();
+	window.uncover.gameStatus = GameStatus.PLAYING;
 }
 
 initialize();

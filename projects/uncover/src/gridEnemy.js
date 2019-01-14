@@ -18,6 +18,8 @@ class GridEnemy {
 		this._pathIndex = 0;
 
 		this._color = 'red';
+
+		this._maxIterations = 1000;
 	}
 
 	render(context) {
@@ -35,7 +37,7 @@ class GridEnemy {
 
 	_move() {
 		if (this._pathIndex < this._path.length) {
-			if (Math.random() < 0.75) {
+			if (Math.random() < 0.65) {
 				this.gridX = this._path[this._pathIndex].x;
 				this.gridY = this._path[this._pathIndex].y;
 				this._pathIndex++;
@@ -76,7 +78,13 @@ class GridEnemy {
 
 		const neighborPositions = [{ dx: 0, dy: -1}, { dx: 1, dy: 0}, { dx: 0, dy: 1}, { dx: -1, dy: 0}];
 
+		let iterations = 0;
 		while (openList.length > 0) {
+			iterations++;
+			if (iterations >= this._maxIterations) {
+				break;
+			}
+
 			// Find node with minimum f
 			let currentNodeIndex = 0;
 			for (let i = 1; i < openList.length; i++) {
@@ -91,15 +99,7 @@ class GridEnemy {
 
 			// Found the goal node, create path
 			if (currentNode.x === goalNode.x && currentNode.y === goalNode.y) {
-				const path = [currentNode];
-
-				let parent = currentNode.parent;
-				while (parent !== undefined) {
-					path.push(parent);
-					parent = parent.parent;
-				}
-
-				return path.reverse();
+				return this._constructPath(currentNode);
 			}
 
 			// Create adjacent neighbors
@@ -141,5 +141,17 @@ class GridEnemy {
 		}
 
 		return [];
+	}
+
+	_constructPath(startNode) {
+		const path = [startNode];
+
+		let parent = startNode.parent;
+		while (parent !== undefined) {
+			path.push(parent);
+			parent = parent.parent;
+		}
+
+		return path.reverse();
 	}
 }
