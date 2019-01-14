@@ -132,6 +132,10 @@ function gameOver() {
 function gameWon() {
 	window.uncover.gameStatus = GameStatus.GAME_WON;
 	clearInterval(tickInterval);
+
+	const hiddenDetails = document.getElementById('uncover-hidden-details');
+	hiddenDetails.style.display = 'block';
+	hiddenDetails.style.visibility = 'visible';
 }
 
 function restart() {

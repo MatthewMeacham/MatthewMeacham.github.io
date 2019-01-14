@@ -19,3 +19,12 @@ p {
 	visibility: hidden;
 	display: none;
 }
+
+#uncover-hidden-details {
+	visibility: hidden;
+	display: none;
+}
+
+strong {
+	margin-right: 0px;
+}
