@@ -20,6 +20,8 @@ let backgroundImage;
 const gameGridSize = 50;
 let gameGrid;
 
+let tickInterval;
+
 function initialize() {
 	gameGrid = new GameGrid(gameGridSize);
 	window.uncover.gameGrid = gameGrid;
@@ -38,6 +40,8 @@ function initialize() {
 	}
 
 	initializeKeyListeners();
+
+	tickInterval = setInterval(tick, 30);
 }
 
 function render() {
@@ -93,9 +97,12 @@ function keyDownHandler(e) {
 	player.keyDownHandler(e);
 
 	if (e.key === 'Escape' || e.key === 'Esc' || e.key === ' ') {
+		e.preventDefault();
 		if (window.uncover.gameStatus === GameStatus.PAUSED) {
+			tickInterval = setInterval(tick, 30);
 			window.uncover.gameStatus = GameStatus.PLAYING;
 		} else if (window.uncover.gameStatus !== GameStatus.GAME_OVER && window.uncover.gameStatus !== GameStatus.GAME_WON) {
+			clearInterval(tickInterval);
 			window.uncover.gameStatus = GameStatus.PAUSED;
 		}
 	} else if (e.key === 'r') {
@@ -113,7 +120,10 @@ function randomIntegerInRangeInclusive(min, max) {
     return Math.floor(Math.random() * (max - min + 1) + min);
 }
 
-initialize();
+function gameOver() {
+	window.uncover.gameStatus = GameStatus.GAME_OVER;
+	clearInterval(tickInterval);
+}
 
+initialize();
 render();
-let tickInterval = setInterval(tick, 30);
