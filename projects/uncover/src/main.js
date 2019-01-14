@@ -13,7 +13,7 @@ const GameStatus = {
 
 let player;
 const numberOfEnemies = 2;
-let enemies = [];
+let enemies;
 
 let backgroundImage;
 
@@ -29,6 +29,7 @@ function initialize() {
 
 	window.uncover.gameStatus = GameStatus.PLAYING;
 
+	enemies = [];
 	for (let i = 0; i < numberOfEnemies; i++) {
 		const gridX = randomIntegerInRangeInclusive(0, gameGridSize);
 		const gridY = gameGridSize - 1;
@@ -43,10 +44,13 @@ function render() {
 	context.clearRect(0, 0, canvas.width, canvas.height);
 
 	gameGrid.render(context);
-	player.render(context);
+	
+	if (window.uncover.gameStatus !== GameStatus.GAME_WON) {
+		player.render(context);
 
-	for (enemy of enemies) {
-		enemy.render(context);
+		for (enemy of enemies) {
+			enemy.render(context);
+		}
 	}
 
 	if (window.uncover.gameStatus === GameStatus.GAME_WON) {
@@ -94,6 +98,10 @@ function keyDownHandler(e) {
 		} else if (window.uncover.gameStatus !== GameStatus.GAME_OVER && window.uncover.gameStatus !== GameStatus.GAME_WON) {
 			window.uncover.gameStatus = GameStatus.PAUSED;
 		}
+	} else if (e.key === 'r') {
+		window.uncover.gameStatus = GameStatus.PAUSED;
+		initialize();
+		window.uncover.gameStatus = GameStatus.PLAYING;
 	}
 }
 

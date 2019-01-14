@@ -47,24 +47,26 @@ class GameGrid {
 		}
 
 		// Lines
-		for (let x = 0; x < this.grid.length; x++) {
-			// Horizontal Lines
-			context.beginPath();
-			context.moveTo(0, x * this.cellRenderSize);
-			context.lineTo(window.uncover.canvas.width, x * this.cellRenderSize);
-			context.strokeStyle = 'black';
-			context.lineWidth = 0.5;
-			context.stroke();
-			context.closePath();
-
-			// Verticle Lines
-			context.beginPath();
-			context.moveTo(x * this.cellRenderSize, 0);
-			context.lineTo(x * this.cellRenderSize, window.uncover.canvas.height);
-			context.strokeStyle = 'black';
-			context.lineWidth = 0.5;
-			context.stroke();
-			context.closePath();
+		if (window.uncover.gameStatus !== GameStatus.GAME_WON) {
+			for (let x = 0; x < this.grid.length; x++) {
+				// Horizontal Lines
+				context.beginPath();
+				context.moveTo(0, x * this.cellRenderSize);
+				context.lineTo(window.uncover.canvas.width, x * this.cellRenderSize);
+				context.strokeStyle = 'black';
+				context.lineWidth = 0.5;
+				context.stroke();
+				context.closePath();
+	
+				// Verticle Lines
+				context.beginPath();
+				context.moveTo(x * this.cellRenderSize, 0);
+				context.lineTo(x * this.cellRenderSize, window.uncover.canvas.height);
+				context.strokeStyle = 'black';
+				context.lineWidth = 0.5;
+				context.stroke();
+				context.closePath();
+			}
 		}
 	}
 
