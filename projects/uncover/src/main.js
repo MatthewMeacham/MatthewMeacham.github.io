@@ -140,6 +140,7 @@ function gameWon() {
 
 function restart() {
 	window.uncover.gameStatus = GameStatus.PAUSED;
+	clearInterval(tickInterval);
 	initialize();
 	window.uncover.gameStatus = GameStatus.PLAYING;
 }
