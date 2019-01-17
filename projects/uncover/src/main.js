@@ -8,7 +8,8 @@ const GameStatus = {
 	PLAYING: 1,
 	PAUSED: 2,
 	GAME_OVER: 3,
-	GAME_WON: 4
+	GAME_WON: 4,
+	INTRODUCTION: 5
 }
 
 let player;
@@ -29,7 +30,7 @@ function initialize() {
 	player = new GridPlayer(gameGridSize / 2, 0);
 	window.uncover.player = player;
 
-	window.uncover.gameStatus = GameStatus.PLAYING;
+	window.uncover.gameStatus = GameStatus.INTRODUCTION;
 
 	enemies = [];
 	for (let i = 0; i < numberOfEnemies; i++) {
@@ -40,8 +41,6 @@ function initialize() {
 	}
 
 	initializeKeyListeners();
-
-	tickInterval = setInterval(tick, 30);
 }
 
 function render() {
@@ -57,7 +56,12 @@ function render() {
 		}
 	}
 
-	if (window.uncover.gameStatus === GameStatus.GAME_WON) {
+	if (window.uncover.gameStatus === GameStatus.INTRODUCTION) {
+		context.font = "48px Verdana";
+		context.fillStyle = "red";
+		context.fillText("Click here and", canvas.width / 2 - 170, canvas.height / 2 - 10);
+		context.fillText("press space to begin", canvas.width / 2 - 250, canvas.height / 2 + 40);
+	} else if (window.uncover.gameStatus === GameStatus.GAME_WON) {
 		context.font = "48px Verdana";
 		context.fillStyle = "red";
 		context.fillText("Game Won!", canvas.width / 2 - 140, canvas.height / 2 - 10);
@@ -104,7 +108,9 @@ function keyDownHandler(e) {
 
 	if (e.key === 'Escape' || e.key === 'Esc' || e.key === ' ') {
 		e.preventDefault();
-		if (window.uncover.gameStatus === GameStatus.PAUSED) {
+		if (window.uncover.gameStatus === GameStatus.INTRODUCTION) {
+			gameStart();
+		} else if (window.uncover.gameStatus === GameStatus.PAUSED) {
 			tickInterval = setInterval(tick, 30);
 			window.uncover.gameStatus = GameStatus.PLAYING;
 		} else if (window.uncover.gameStatus !== GameStatus.GAME_OVER && window.uncover.gameStatus !== GameStatus.GAME_WON) {
@@ -122,6 +128,11 @@ function keyUpHandler(e) {
 
 function randomIntegerInRangeInclusive(min, max) {
     return Math.floor(Math.random() * (max - min + 1) + min);
+}
+
+function gameStart() {
+	window.uncover.gameStatus = GameStatus.PLAYING;
+	tickInterval = setInterval(tick, 30);
 }
 
 function gameOver() {
@@ -142,7 +153,7 @@ function restart() {
 	window.uncover.gameStatus = GameStatus.PAUSED;
 	clearInterval(tickInterval);
 	initialize();
-	window.uncover.gameStatus = GameStatus.PLAYING;
+	window.uncover.gameStatus = GameStatus.INTRODUCTION;
 }
 
 initialize();
